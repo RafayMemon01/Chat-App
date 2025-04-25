@@ -55,8 +55,9 @@ export const sendMessage = async(req, res)=>{
             text,
             image: imageURL
         });
+        await newMessage.save()
 
-        //Todo: realtime functionality Socket
+        //Todo: realtime functionality Socket io
         res.status(201).json(newMessage)   
 
     } catch (error) {
