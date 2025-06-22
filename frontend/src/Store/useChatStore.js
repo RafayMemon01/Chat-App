@@ -35,9 +35,13 @@ export const useChatStore = create((set, get) => ({
   sendMessage: async (messageData) =>{
     const {selectedUser, messages} = get()
     try {
-      const res = axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData)
-      set({messages:[...messages, res.data]})
-    } catch (error) {
+    const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData); // <-- FIXED
+    if (res.data && res.data._id && res.data.senderId) {
+      set({ messages: [...messages, res.data] });
+    } else {
+      console.warn("Invalid message data returned from API:", res.data);
+    }
+  } catch (error) {
       toast.error(error.response.data.message);
       
     }
